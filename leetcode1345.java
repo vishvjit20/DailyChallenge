@@ -3,32 +3,33 @@ import java.util.*;
 class leetcode1345 {
     public int minJumps(int arr[]) {
         int n = arr.length;
-        Map<Integer, List<Integer>> indicesOfValue = new HashMap<>();
+        Map<Integer, List<Integer>> map = new HashMap<>();
+        boolean[] visited = new boolean[n];
         for (int i = 0; i < n; i++) {
-            indicesOfValue.computeIfAbsent(arr[i], x -> new LinkedList<>()).add(i);
+            map.computeIfAbsent(arr[i], x -> new LinkedList<>()).add(i);
         }
-        boolean visited[] = new boolean[n];
-        Queue<Integer> q = new LinkedList<>();
-        q.offer(0);
-        int step = 0;
-        while (!q.isEmpty()) {
-            int size = q.size();
+
+        Queue<Integer> que = new LinkedList<>();
+        que.add(0);
+        visited[0] = true;
+        int steps = 0;
+        while (que.size() > 0) {
+            int size = que.size();
             while (size-- > 0) {
-                int i = q.poll();
+                int i = que.remove();
                 if (i == n - 1)
-                    return step;
-                List<Integer> next = indicesOfValue.get(arr[i]);
+                    return steps;
+                List<Integer> next = map.get(arr[i]);
                 next.add(i - 1);
                 next.add(i + 1);
                 for (int j : next) {
                     if (j >= 0 && j < n && !visited[j]) {
                         visited[j] = true;
-                        q.offer(j);
+                        que.add(j);
                     }
                 }
-                next.clear();
             }
-            step++;
+            steps++;
         }
         return 0;
     }
